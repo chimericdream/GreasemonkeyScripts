@@ -1,0 +1,14 @@
+{
+    "name": "@chimericdream/youtube-playlist-duration",
+    "nice-name": "YouTube Playlist Duration",
+    "version": "1.0.0",
+    "description": "Greasemonkey script to add the total duration for a playlist to the details section.",
+    "gm-build-info": {
+        "grant": [],
+        "require": [
+            "https://raw.githubusercontent.com/chimericdream/JS-Debounce/master/debounce.js",
+            "http://code.jquery.com/jquery-latest.js"
+        ],
+        "urls": ["https://www.youtube.com/playlist*"]
+    }
+}

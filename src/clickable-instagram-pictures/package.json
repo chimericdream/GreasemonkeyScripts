@@ -1,0 +1,13 @@
+{
+    "name": "@chimericdream/clickable-instagram-pictures",
+    "nice-name": "Clickable Instagram Pictures",
+    "version": "1.0.0",
+    "description": "Greasemonkey script to make Instagram images clickable to view the original.",
+    "gm-build-info": {
+        "grant": [],
+        "require": [
+            "http://code.jquery.com/jquery-latest.js"
+        ],
+        "urls": ["https://instagram.com/p/*"]
+    }
+}

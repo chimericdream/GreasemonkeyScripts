@@ -1,0 +1,16 @@
+{
+  "name": "@chimericdream/greasemonkey-scripts",
+  "nice-name": "chimericdream's Greasemonkey script library",
+  "version": "1.0.0",
+  "description": "A collection of user scripts for Greasemonkey",
+  "license": "MIT",
+  "author": "Bill Parrott <bill@chimericdream.com> (http://chimericdream.com/)",
+  "devDependencies": {
+    "event-stream": "^3.3.1",
+    "gulp": "^3.9.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.2.0",
+    "gulp-util": "^3.0.6",
+    "through2": "^2.0.0"
+  }
+}
