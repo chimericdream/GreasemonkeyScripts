@@ -65,7 +65,7 @@ function generateMeta(file) {
              + '// @downloadUrl ' + downloadUrl + "\n";
 
     json['gm-build-info'].urls.forEach(function(url) {
-        meta += '// @match       ' + url + "\n";
+        meta += '// @include     ' + url + "\n";
     });
 
     json['gm-build-info'].require.forEach(function(url) {
