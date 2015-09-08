@@ -8,12 +8,3 @@
 // @require     http://code.jquery.com/jquery-latest.js
 // @grant       none
 // ==/UserScript==
-(function($) {
-    'use strict';
-
-    $(document).ready(function(){
-        $('.-cx-PRIVATE-Photo__clickShield').remove();
-        var img = $('#pImage_0');
-        img.parent().wrap('<a href="' + img.attr('src') + '"></a>');
-    });
-}(jQuery));

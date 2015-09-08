@@ -1,0 +1,15 @@
+{
+    "name": "@chimericdream/twitter-skip-to-image",
+    "nice-name": "Twitter Skip to Image",
+    "version": "1.0.0",
+    "description": "",
+    "gm-build-info": {
+        "grant": [],
+        "require": [
+            "http://code.jquery.com/jquery-latest.js"
+        ],
+        "urls": [
+            "/^https?:\\/\\/([^.]+\\.)?twitter\\.com\\/.*\\/status\\/\\d+\\/photo.*$/"
+        ]
+    }
+}

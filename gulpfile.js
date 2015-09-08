@@ -2,21 +2,24 @@ var gulp = require('gulp');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 
-gulp.task('default', function() {
+gulp.task('default', ['scripts', 'meta']);
+
+gulp.task('meta', function() {
+    return gulp.src('src/**/*.js')
+        .pipe(setMetaBlock())
+        .pipe(rename(function(path) {
+            path.basename += '.meta';
+        }))
+        .pipe(gulp.dest('dist'));
+});
+
+gulp.task('scripts', function() {
     return gulp.src('src/**/*.js')
         .pipe(addMetaBlock())
         .pipe(rename(function(path) {
             path.basename += '.user';
         }))
         .pipe(gulp.dest('dist'));
-});
-
-gulp.task('meta', function() {
-    //
-});
-
-gulp.task('scripts', function() {
-    //
 });
 
 function prefixStream(prefixText) {
@@ -27,30 +30,7 @@ function prefixStream(prefixText) {
 
 function addMetaBlock() {
     function transform(file, cb) {
-        var path = file.path.replace(/^(.+[\/\\])[0-9a-zA-Z_-]+\.js$/, '$1package.json');
-        var json = require(path);
-        var meta
-            = '// ==UserScript==' + "\n"
-            + '// @name        ' + json['nice-name'] + "\n"
-            + '// @description ' + json.description + "\n"
-            + '// @version     ' + json.version + "\n";
-        json['gm-build-info'].urls.forEach(function(url) {
-            meta += '// @match       ' + url + "\n";
-        });
-        if (json['gm-build-info'].grant.length > 0) {
-            json['gm-build-info'].grant.forEach(function(url) {
-                meta += '// @grant       ' + url + "\n";
-            });
-        } else {
-            meta += '// @grant       none' + "\n";
-        }
-        json['gm-build-info'].require.forEach(function(url) {
-            meta += '// @require     ' + url + "\n";
-        });
-        meta += '// ==/UserScript==' + "\n";
-
-        var metaText = new Buffer(meta);
-        file.contents = Buffer.concat([metaText, file.contents]);
+        file.contents = Buffer.concat([new Buffer(generateMeta(file)), file.contents]);
 
         cb(null, file);
     }
@@ -58,5 +38,55 @@ function addMetaBlock() {
     return require('event-stream').map(transform);
 }
 
-function readPackageJson() {
+function setMetaBlock() {
+    function transform(file, cb) {
+        file.contents = new Buffer(generateMeta(file));
+
+        cb(null, file);
+    }
+
+    return require('event-stream').map(transform);
+}
+
+function generateMeta(file) {
+    var json = getPackageJson(file);
+    var re = /^(?:(?:.+[\/\\])[0-9a-zA-Z_-]+[\/\\])*([0-9a-zA-Z_-]+[\/\\][0-9a-zA-Z_-]+)\.js$/;
+    var safePath = file.path.replace(/\\/g, '/');
+    var ghBaseUrl = 'https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/';
+
+    var updateUrl = ghBaseUrl + safePath.replace(re, '$1.meta.js');
+    var downloadUrl = ghBaseUrl + safePath.replace(re, '$1.user.js');
+
+    var meta = '// ==UserScript==' + "\n"
+             + '// @name        ' + json['nice-name'] + "\n"
+             + '// @description ' + json.description + "\n"
+             + '// @version     ' + json.version + "\n"
+             + '// @updateUrl   ' + updateUrl + "\n"
+             + '// @downloadUrl ' + downloadUrl + "\n";
+
+    json['gm-build-info'].urls.forEach(function(url) {
+        meta += '// @match       ' + url + "\n";
+    });
+
+    json['gm-build-info'].require.forEach(function(url) {
+        meta += '// @require     ' + url + "\n";
+    });
+
+    if (json['gm-build-info'].grant.length > 0) {
+        json['gm-build-info'].grant.forEach(function(url) {
+            meta += '// @grant       ' + url + "\n";
+        });
+    } else {
+        meta += '// @grant       none' + "\n";
+    }
+    meta += '// ==/UserScript==' + "\n";
+
+    return meta;
+}
+
+function getPackageJson(file) {
+    var path = file.path.replace(/^(.+[\/\\])[0-9a-zA-Z_-]+\.js$/, '$1package.json');
+    var json = require(path);
+
+    return json;
 }
