@@ -1,14 +1,13 @@
 {
     "name": "@chimericdream/auto-download-instructables",
     "nice-name": "Auto-Download Instructables",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Greasemonkey script to automatically navigate to the download page for an Instructable and trigger the download.",
     "gm-build-info": {
         "grant": [],
         "require": [
             "https://raw.githubusercontent.com/chimericdream/JS-URL-Helpers/master/qsvar.js",
-            "https://raw.githubusercontent.com/chimericdream/JS-URL-Helpers/master/absurl.js",
-            "http://code.jquery.com/jquery-latest.js"
+            "https://raw.githubusercontent.com/chimericdream/JS-URL-Helpers/master/absurl.js"
         ],
         "urls": [
             "http://instructables.com/id/*",

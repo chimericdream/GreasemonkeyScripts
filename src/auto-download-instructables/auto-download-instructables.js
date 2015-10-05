@@ -2,30 +2,33 @@
     'use strict';
 
     $(document).ready(function() {
-        var loggedin = ($('#you-menu > a.name').size() > 0);
-        if (!loggedin) {
-            return;
-        }
-
-        function goToDownloadPage() {
-            var href = $('#ible-header-inner .actionbar .fl .btn.download-btn').attr('href');
-            if (typeof href !== 'undefined') {
-                window.location = getAbsoluteUrl(href);
+        var delay = function() {
+            var loggedin = ($('#you-menu > a.name').length > 0);
+            if (!loggedin) {
+                return;
             }
-        }
 
-        function downloadIble() {
-            var href = $('#main-content > .stepdescription > .txt > p > a.stepLabel.pdf_config_body_a_1').attr('href');
-            if (typeof href !== 'undefined') {
-                window.location = getAbsoluteUrl(href);
+            function goToDownloadPage() {
+                var href = $('#ible-header-actions-bar #download-pdf-btn-top').attr('href');
+                if (typeof href !== 'undefined') {
+                    window.location = getAbsoluteUrl(href);
+                }
             }
-        }
 
-        var onDownloadPage = (getQueryVariable('download') === 'pdf');
-        if (onDownloadPage) {
-            downloadIble();
-        } else {
-            goToDownloadPage();
-        }
+            function downloadIble() {
+                var href = $('#pdf-content > .pdf-download-available > p > a').attr('href');
+                if (typeof href !== 'undefined') {
+                    window.location = getAbsoluteUrl(href);
+                }
+            }
+
+            var onDownloadPage = (getQueryVariable('download') === 'pdf');
+            if (onDownloadPage) {
+                downloadIble();
+            } else {
+                goToDownloadPage();
+            }
+        };
+        window.setTimeout(delay, 2000);
     });
 })(jQuery, window.fnGetAbsUrl, window.fnGetQueryVar);
