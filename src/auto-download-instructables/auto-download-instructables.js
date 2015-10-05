@@ -29,6 +29,6 @@
                 goToDownloadPage();
             }
         };
-        window.setTimeout(delay, 2000);
+        window.setTimeout(delay, 10000);
     });
 })(jQuery, window.fnGetAbsUrl, window.fnGetQueryVar);
