@@ -1,7 +1,7 @@
 {
     "name": "@chimericdream/auto-download-instructables",
     "nice-name": "Auto-Download Instructables",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "description": "Greasemonkey script to automatically navigate to the download page for an Instructable and trigger the download.",
     "gm-build-info": {
         "grant": [],

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Auto-Download Instructables
 // @description Greasemonkey script to automatically navigate to the download page for an Instructable and trigger the download.
-// @version     1.0.2
+// @version     1.1.0
 // @updateUrl   https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/auto-download-instructables/auto-download-instructables.meta.js
 // @downloadUrl https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/auto-download-instructables/auto-download-instructables.user.js
 // @include     http://instructables.com/id/*
@@ -30,8 +30,10 @@
             }
 
             function downloadIble() {
-                var href = $('#pdf-content > .pdf-download-available > p > a').attr('href');
+                var link = $('#pdf-content > .pdf-download-available > p > a');
+                var href = link.attr('href');
                 if (typeof href !== 'undefined') {
+                    link.css('text-decoration', 'line-through');
                     window.location = getAbsoluteUrl(href);
                 }
             }

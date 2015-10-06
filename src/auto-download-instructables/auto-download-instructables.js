@@ -16,8 +16,10 @@
             }
 
             function downloadIble() {
-                var href = $('#pdf-content > .pdf-download-available > p > a').attr('href');
+                var link = $('#pdf-content > .pdf-download-available > p > a');
+                var href = link.attr('href');
                 if (typeof href !== 'undefined') {
+                    link.css('text-decoration', 'line-through');
                     window.location = getAbsoluteUrl(href);
                 }
             }
