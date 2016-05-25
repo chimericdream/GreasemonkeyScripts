@@ -1,0 +1,20 @@
+{
+    "name": "@chimericdream/feedly-unread-count",
+    "nice-name": "Feedly Unread Count",
+    "version": "2.0.0",
+    "description": "Puts the unread count in the favicon for Feedly as well as the browser's title bar",
+    "gm-build-info": {
+        "grant": [
+            "GM_getValue",
+            "GM_setValue",
+            "GM_registerMenuCommand"
+        ],
+        "require": [
+            "http://code.jquery.com/jquery-latest.js"
+        ],
+        "urls": [
+            "http://feedly.com/*",
+            "https://feedly.com/*"
+        ]
+    }
+}
