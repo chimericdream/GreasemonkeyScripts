@@ -16,12 +16,12 @@
         var rules = [
             '#comic-rocket-science-controls {background-color: #51493d; color: #FFF; margin: 0 auto 20px; width: 552px; padding: 10px;}',
             '#comic-rocket-science-controls .comics-item-image span {height: auto; padding: 0 0 1ex 0;}',
+            '#comic-rocket-science-controls .form-search input {width: calc(100% - 34px - 1em);}',
             '#comic-rocket-science-controls label {color: #FFF; display: inline-block;}',
             '#comic-rocket-science-controls label + label {margin-left: 5px;}',
             '#comic-rocket-science-controls label input {display: inline;}'
         ];
         var styles = '<style>' + rules.join('') + '</style>';
-
         $('head').append(styles);
 
         $('.comics-item').each(function(){
@@ -73,6 +73,7 @@
 
         $controls.append(content.join('<br>'));
         $container.prepend($controls);
+        $controls.after('<hr>');
     });
 
     $('.span8').on('click', '#comic-rocket-science-controls input', function(e) {
