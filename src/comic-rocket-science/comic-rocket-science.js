@@ -10,6 +10,7 @@
     var $comics     = [];
     var $wrapper    = null;
     var $container  = $(d.createElement('div'));
+    var $status     = $(d.createElement('div')).attr('id', 'comic-status-text');
 
     var readStrips  = 0;
     var totalStrips = 0;
@@ -23,15 +24,18 @@
         var rules = [
             '#comic-rocket-science-controls {background-color: #51493d; color: #FFF; margin: 0 auto 20px; width: 552px; padding: 10px;}',
             '#comic-rocket-science-controls .comics-item-image span {height: auto; padding: 0 0 1ex 0;}',
-            '#comic-rocket-science-controls .form-search input {width: calc(100% - 34px - 1em);}',
+            '#comic-rocket-science-controls .form-search input {border-radius: 3px; padding-left: 10px; width: calc(100% - 14px);}',
             '#comic-rocket-science-controls label {color: #FFF; display: inline-block;}',
             '#comic-rocket-science-controls label + label {margin-left: 5px;}',
             '#comic-rocket-science-controls label input {display: inline;}',
             '#comic-rocket-science-controls .btn-primary {padding: 5px 10px; background-image: none;}',
             '#comic-rocket-science-controls .btn-primary span {display: none;}',
+            '#comic-rocket-science-controls .btn-primary.sorted-asc {font-weight: bold;}',
+            '#comic-rocket-science-controls .btn-primary.sorted-desc {font-weight: bold;}',
             '#comic-rocket-science-controls .btn-primary.sorted-asc .asc {display: inline;}',
             '#comic-rocket-science-controls .btn-primary.sorted-desc .desc {display: inline;}',
-            '#comic-rocket-science-controls .btn-primary + .btn-primary {margin-left: 5px;}'
+            '#comic-rocket-science-controls .btn-primary + .btn-primary {margin-left: 5px;}',
+            '#comic-status-text {margin: 0 auto 10px; width: 572px;}'
         ];
         var styles = '<style>' + rules.join('') + '</style>';
         $('head').append(styles);
@@ -42,7 +46,7 @@
             var rating   = $comic.find('.comics-item-rating abbr').text();
             var dt       = $comic.find('.comics-item-date div').text().replace('Updated: ', '').replace('-', '');
             var progress = $comic.find('.progress-label').text().split('/');
-            
+
             readStrips  += parseInt(progress[0]);
             totalStrips += parseInt(progress[1]);
 
@@ -68,7 +72,7 @@
         $controls.attr('id', 'comic-rocket-science-controls');
 
         var header = '<span class="comics-item-image"><span>Comic Rocket <strong>Science</strong></span></span>';
-        var search = '<div class="form-search"><input name="crs-title-search" placeholder="Filter by title"/><button id="crs-search"><img src="/media/img/icon-search.png" alt="" height="14" width="15"/></button></div>';
+        var search = '<div class="form-search"><input id="crs-title-search" placeholder="Filter by title"/></div>';
         var filterButtons = [
             '<label><input type="checkbox" name="crs-rating-filter-all" value="all" checked> All</label>',
             '<label><input type="radio" name="crs-rating-filter" value="PG"> PG</label>',
@@ -99,9 +103,21 @@
         $controls.append(content.join('<br>'));
         $controls.after('<hr>');
 
+        $container.before($status);
+
         $comics.sort(compareTitles);
         renderComics();
     });
+
+    $('.span8').on('keyup', '#crs-title-search', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        filter.title = $(this).val().toLowerCase();
+        filterComics();
+    });
+
+
 
     $('.span8').on('click', '#comic-rocket-science-controls .sort-btn', function(e) {
         e.preventDefault();
@@ -170,6 +186,7 @@
         for (var i = 0; i < $comics.length; i++) {
             $container.append($comics[i]);
         }
+        updateFilterStatus();
     }
 
     function compareTitles(a, b) {
@@ -207,17 +224,29 @@
     function filterComics() {
         for (var i = 0; i < $comics.length; i++) {
             var $c = $comics[i];
-            if (filter.rating !== '' && $c.attr('data-rating') !== filter.rating && $c.is(':visible')) {
-                $c.slideUp();
+
+            var title  = $c.attr('data-title').toLowerCase();
+            var rating = $c.attr('data-rating');
+
+            var matchesTitle = (filter.title === '' || title.includes(filter.title));
+            var matchesRating = (filter.rating === '' || rating === filter.rating);
+
+            if (matchesTitle && matchesRating) {
+                $c.show();
                 continue;
             }
-            if (filter.rating !== '' && $c.attr('data-rating') === filter.rating && !$c.is(':visible')) {
-                $c.slideDown();
-                continue;
-            }
-            if (filter.rating === '' && !$c.is(':visible')) {
-                $c.slideDown();
+            $c.hide();
+        }
+        updateFilterStatus();
+    }
+
+    function updateFilterStatus() {
+        var visible = 0;
+        for (var i = 0; i < $comics.length; i++) {
+            if ($comics[i].is(':visible')) {
+                visible++;
             }
         }
+        $status.text('Showing ' + visible + ' of ' + $comics.length + ' comics.');
     }
 }(window.jQuery, window, document));
