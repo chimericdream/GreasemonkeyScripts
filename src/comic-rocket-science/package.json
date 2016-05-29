@@ -1,7 +1,7 @@
 {
     "name": "@chimericdream/comic-rocket-science",
     "nice-name": "Comic Rocket Science",
-    "version": "0.0.1a",
+    "version": "0.1.0a",
     "description": "Greasemonkey script to add more comic management features to Comic Rocket.",
     "gm-build-info": {
         "grant": [],
