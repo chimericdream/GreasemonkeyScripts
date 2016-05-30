@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        YouTube Playlist Duration
 // @description Greasemonkey script to add the total duration for a playlist to the details section.
-// @version     1.0.0
+// @version     1.0.1
 // @updateUrl   https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/youtube-playlist-duration/youtube-playlist-duration.meta.js
 // @downloadUrl https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/youtube-playlist-duration/youtube-playlist-duration.user.js
 // @include     https://www.youtube.com/playlist*
@@ -9,70 +9,4 @@
 // @require     http://code.jquery.com/jquery-latest.js
 // @grant       none
 // ==/UserScript==
-(function($, debounce) {
-    'use strict';
-
-    var playlistLength = -1;
-    var time = {
-        h: 0,
-        m: 0,
-        s: 0
-    };
-
-    function getPlaylistLength() {
-        return $('#pl-load-more-destination tr').length;
-    }
-
-    function getPlaylistTimestamps() {
-        return $('#pl-load-more-destination tr .timestamp span');
-    }
-
-    function updateTotalTime() {
-        var len = getPlaylistLength();
-        if (len === playlistLength) {
-            return;
-        }
-
-        playlistLength = len;
-        time = {
-            h: 0,
-            m: 0,
-            s: 0
-        };
-
-        var timestamps = getPlaylistTimestamps();
-        timestamps.each(function(){
-            var t = $(this).text().split(':');
-
-            var seconds = parseInt(t.pop(), 10) || 0;
-            var minutes = parseInt(t.pop(), 10) || 0;
-            var hours   = parseInt(t.pop(), 10) || 0;
-
-            time.h += hours;
-            time.m += minutes;
-            time.s += seconds;
-        });
-
-        time.m += Math.floor(time.s / 60);
-        time.s = time.s % 60;
-
-        time.h += Math.floor(time.m / 60);
-        time.m = time.m % 60;
-
-        $('#pl-total-time').remove();
-
-        var h = (time.h > 0) ? time.h + ':' : '';
-        var m = (time.m > 0) ? time.m + ':' : '0:';
-        var s = (time.s > 0) ? ((time.s < 10) ? '0' + time.s : time.s) : '00';
-
-        $('#pl-header .pl-header-content .pl-header-details li:nth-child(2)').after('<li id="pl-total-time">' + h + m + s + '</li>');
-    }
-
-    $(document).ready(function(){
-        var safeUpdate = debounce(updateTotalTime, 250, true);
-        var tbody = document.getElementById('pl-load-more-destination');
-
-        updateTotalTime();
-        tbody.addEventListener('DOMNodeInserted', safeUpdate);
-    });
-}(jQuery, window.fnDebounce));
+!function(t,e){"use strict";function n(){return t("#pl-load-more-destination tr").length}function o(){return t("#pl-load-more-destination tr .timestamp span")}function r(){var e=n();if(e!==a){a=e,i={h:0,m:0,s:0};var r=o();r.each(function(){var e=t(this).text().split(":"),n=parseInt(e.pop(),10)||0,o=parseInt(e.pop(),10)||0,r=parseInt(e.pop(),10)||0;i.h+=r,i.m+=o,i.s+=n}),i.m+=Math.floor(i.s/60),i.s=i.s%60,i.h+=Math.floor(i.m/60),i.m=i.m%60,t("#pl-total-time").remove();var s=i.h>0?i.h+":":"",l=i.m>0?i.m+":":"0:",d=i.s>0?i.s<10?"0"+i.s:i.s:"00";t("#pl-header .pl-header-content .pl-header-details li:nth-child(2)").after('<li id="pl-total-time">'+s+l+d+"</li>")}}var a=-1,i={h:0,m:0,s:0};t(document).ready(function(){var t=e(r,250,!0),n=document.getElementById("pl-load-more-destination");r(),n.addEventListener("DOMNodeInserted",t)})}(jQuery,window.fnDebounce);
