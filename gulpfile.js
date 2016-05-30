@@ -15,6 +15,7 @@ gulp.task('meta', function() {
 
 gulp.task('scripts', function() {
     return gulp.src('src/**/*.js')
+        .pipe(uglify())
         .pipe(addMetaBlock())
         .pipe(rename(function(path) {
             path.basename += '.user';
