@@ -1,0 +1,15 @@
+{
+    "name": "@chimericdream/deviantart-download-image",
+    "nice-name": "DeviantArt Download Current Image",
+    "version": "1.0.1",
+    "description": "Adds a download button to all DeviantArt images",
+    "gm-build-info": {
+        "grant": [],
+        "require": [
+            "http://code.jquery.com/jquery-latest.min.js"
+        ],
+        "urls": [
+            "/^https?://([^.]+\\.)?deviantart\\.com/.*$/"
+        ]
+    }
+}
