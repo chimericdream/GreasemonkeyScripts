@@ -1,0 +1,19 @@
+{
+    "name": "@chimericdream/imdb-tweaks",
+    "nice-name": "IMDb Tweaks",
+    "version": "1.0.1",
+    "description": "Tweaks to the IMDB website. Remove ref query string and make images linkable.",
+    "gm-build-info": {
+        "grant": [],
+        "require": [
+            "http://code.jquery.com/jquery-latest.min.js"
+        ],
+        "urls": [
+            "/^https?://([^.]+\\.)?imdb\\.com/.*$/"
+        ],
+        "excludes": [
+            "/^https?://i\\.imdb\\.com/.*$/",
+            "/^https?://([^.]+\\.)?imdb\\.com/images/.*$/"
+        ]
+    }
+}
