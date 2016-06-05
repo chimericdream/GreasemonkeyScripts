@@ -135,7 +135,7 @@
         var sortingButtons = [
             '<a class="btn btn-primary sort-btn sorted-asc" id="crs-sort-title" href="#">Title' + arrows + '</a>',
             '<a class="btn btn-primary sort-btn" id="crs-sort-rating" href="#">Rating' + arrows + '</a>',
-            '<a class="btn btn-primary sort-btn" id="crs-sort-unread" href="#">Unread' + arrows + '</a>',
+            '<a class="btn btn-primary sort-btn" id="crs-sort-unread" href="#"># Unread' + arrows + '</a>',
             '<a class="btn btn-primary sort-btn" id="crs-sort-read" href="#"># Read' + arrows + '</a>',
             '<a class="btn btn-primary sort-btn" id="crs-sort-percent-read" href="#">% Read' + arrows + '</a>',
             '<a class="btn btn-primary sort-btn" id="crs-sort-total" href="#">Total' + arrows + '</a>',
