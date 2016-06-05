@@ -57,6 +57,12 @@
             var r1 = parseInt(a.attr('data-total')) - parseInt(a.attr('data-read'));
             var r2 = parseInt(b.attr('data-total')) - parseInt(b.attr('data-read'));
             return parseInt(r1) - parseInt(r2);
+        },
+
+        'percent-read': function(a, b) {
+            var r1 = (parseInt(a.attr('data-read')) / parseInt(a.attr('data-total'))) * 100;
+            var r2 = (parseInt(b.attr('data-read')) / parseInt(b.attr('data-total'))) * 100;
+            return r1 - r2;
         }
     };
 
@@ -125,7 +131,8 @@
             '<a class="btn btn-primary sort-btn sorted-asc" id="crs-sort-title" href="#">Title' + arrows + '</a>',
             '<a class="btn btn-primary sort-btn" id="crs-sort-rating" href="#">Rating' + arrows + '</a>',
             '<a class="btn btn-primary sort-btn" id="crs-sort-unread" href="#">Unread' + arrows + '</a>',
-            '<a class="btn btn-primary sort-btn" id="crs-sort-read" href="#">Read' + arrows + '</a>',
+            '<a class="btn btn-primary sort-btn" id="crs-sort-read" href="#"># Read' + arrows + '</a>',
+            '<a class="btn btn-primary sort-btn" id="crs-sort-percent-read" href="#">% Read' + arrows + '</a>',
             '<a class="btn btn-primary sort-btn" id="crs-sort-total" href="#">Total' + arrows + '</a>',
             '<a class="btn btn-primary sort-btn" id="crs-sort-updated" href="#">Updated' + arrows + '</a>'
         ];
