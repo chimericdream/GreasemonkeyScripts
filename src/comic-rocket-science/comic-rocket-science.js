@@ -4,7 +4,8 @@
     var RATINGS     = {
         'PG': 1,
         'R': 2,
-        'NC-17': 3
+        'NC-17': 3,
+        'UR': 4
     };
 
     var $comics     = [];
@@ -17,7 +18,7 @@
 
     var filter      = {
         'title':  '',
-        'rating': ['PG', 'R', 'NC-17']
+        'rating': ['PG', 'R', 'NC-17', 'UR']
     };
 
     var Sort = {
@@ -91,7 +92,11 @@
             totalStrips += parseInt(progress[1]);
 
             $comic.attr('data-title', title);
-            $comic.attr('data-rating', rating);
+            if (rating === '') {
+                $comic.attr('data-rating', 'UR');
+            } else {
+                $comic.attr('data-rating', rating);
+            }
             $comic.attr('data-date', dt);
             $comic.attr('data-read', progress[0]);
             $comic.attr('data-total', progress[1]);
@@ -114,10 +119,10 @@
         var header = '<span class="comics-item-image"><span>Comic Rocket <strong>Science</strong></span></span>';
         var search = '<div class="form-search"><input id="crs-title-search" placeholder="Filter by title"/></div>';
         var filterButtons = [
-            //'<label><input type="checkbox" name="crs-rating-filter" value="UR" checked> Unrated</label>',
             '<label><input type="checkbox" name="crs-rating-filter" value="PG" checked> PG</label>',
             '<label><input type="checkbox" name="crs-rating-filter" value="R" checked> R</label>',
-            '<label><input type="checkbox" name="crs-rating-filter" value="NC-17" checked> NC-17</label>'
+            '<label><input type="checkbox" name="crs-rating-filter" value="NC-17" checked> NC-17</label>',
+            '<label><input type="checkbox" name="crs-rating-filter" value="UR" checked> Unrated</label>'
         ];
 
         var arrows = '<span class="asc"> &uparrow;</span><span class="desc"> &downarrow;</span>';
@@ -214,7 +219,7 @@
             var rating = $c.attr('data-rating');
 
             var matchesTitle = (filter.title === '' || title.includes(filter.title));
-            var matchesRating = (filter.rating.length === 3 || filter.rating.indexOf(rating) !== -1);
+            var matchesRating = (filter.rating.length === 4 || filter.rating.indexOf(rating) !== -1);
 
             if (matchesTitle && matchesRating) {
                 $c.show();
