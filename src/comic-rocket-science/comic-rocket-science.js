@@ -17,7 +17,7 @@
 
     var filter      = {
         'title':  '',
-        'rating': ''
+        'rating': ['PG', 'R', 'NC-17']
     };
 
     $(d).ready(function(){
@@ -74,10 +74,10 @@
         var header = '<span class="comics-item-image"><span>Comic Rocket <strong>Science</strong></span></span>';
         var search = '<div class="form-search"><input id="crs-title-search" placeholder="Filter by title"/></div>';
         var filterButtons = [
-            '<label><input type="checkbox" name="crs-rating-filter-all" value="all" checked> All</label>',
-            '<label><input type="radio" name="crs-rating-filter" value="PG"> PG</label>',
-            '<label><input type="radio" name="crs-rating-filter" value="R"> R</label>',
-            '<label><input type="radio" name="crs-rating-filter" value="NC-17"> NC-17</label>'
+            //'<label><input type="checkbox" name="crs-rating-filter" value="UR" checked> Unrated</label>',
+            '<label><input type="checkbox" name="crs-rating-filter" value="PG" checked> PG</label>',
+            '<label><input type="checkbox" name="crs-rating-filter" value="R" checked> R</label>',
+            '<label><input type="checkbox" name="crs-rating-filter" value="NC-17" checked> NC-17</label>'
         ];
 
         var arrows = '<span class="asc"> &uparrow;</span><span class="desc"> &downarrow;</span>';
@@ -165,18 +165,11 @@
         e.stopPropagation();
 
         var $el = $(this);
-        switch ($el.attr('type')) {
-            case 'checkbox':
-                $('input[name="crs-rating-filter"]').attr('checked', false);
-                filter.rating = '';
-                break;
-            case 'radio':
-                $('input[name="crs-rating-filter-all"]').attr('checked', false);
-                filter.rating = $el.val();
-                break;
-            default:
-                // no-op
-                break;
+        if ($el.attr('checked')) {
+            filter.rating.push($el.val());
+        } else {
+            var idx = filter.rating.indexOf($el.val());
+            filter.rating.splice(idx, 1);
         }
         filterComics();
     });
@@ -229,7 +222,7 @@
             var rating = $c.attr('data-rating');
 
             var matchesTitle = (filter.title === '' || title.includes(filter.title));
-            var matchesRating = (filter.rating === '' || rating === filter.rating);
+            var matchesRating = (filter.rating.length === 3 || filter.rating.indexOf(rating) !== -1);
 
             if (matchesTitle && matchesRating) {
                 $c.show();
