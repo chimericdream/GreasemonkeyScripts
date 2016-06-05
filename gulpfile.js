@@ -65,16 +65,28 @@ function generateMeta(file) {
              + '// @updateUrl   ' + updateUrl + "\n"
              + '// @downloadUrl ' + downloadUrl + "\n";
 
-    json['gm-build-info'].urls.forEach(function(url) {
-        meta += '// @include     ' + url + "\n";
-    });
+    var buildInfo = json['gm-build-info'];
 
-    json['gm-build-info'].require.forEach(function(url) {
-        meta += '// @require     ' + url + "\n";
-    });
+    if (typeof buildInfo['urls'] !== 'undefined') {
+        buildInfo.urls.forEach(function(url) {
+            meta += '// @include     ' + url + "\n";
+        });
+    }
 
-    if (json['gm-build-info'].grant.length > 0) {
-        json['gm-build-info'].grant.forEach(function(url) {
+    if (typeof buildInfo['excludes'] !== 'undefined') {
+        buildInfo.excludes.forEach(function(url) {
+            meta += '// @exclude     ' + url + "\n";
+        });
+    }
+
+    if (typeof buildInfo['require'] !== 'undefined') {
+        buildInfo.require.forEach(function(url) {
+            meta += '// @require     ' + url + "\n";
+        });
+    }
+
+    if (typeof buildInfo['require'] !== 'undefined' && buildInfo.grant.length > 0) {
+        buildInfo.grant.forEach(function(url) {
             meta += '// @grant       ' + url + "\n";
         });
     } else {
