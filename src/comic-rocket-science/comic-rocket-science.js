@@ -51,6 +51,12 @@
             var r1 = a.attr('data-date');
             var r2 = b.attr('data-date');
             return parseInt(r1) - parseInt(r2);
+        },
+
+        'unread': function(a, b) {
+            var r1 = parseInt(a.attr('data-total')) - parseInt(a.attr('data-read'));
+            var r2 = parseInt(b.attr('data-total')) - parseInt(b.attr('data-read'));
+            return parseInt(r1) - parseInt(r2);
         }
     };
 
@@ -118,6 +124,7 @@
         var sortingButtons = [
             '<a class="btn btn-primary sort-btn sorted-asc" id="crs-sort-title" href="#">Title' + arrows + '</a>',
             '<a class="btn btn-primary sort-btn" id="crs-sort-rating" href="#">Rating' + arrows + '</a>',
+            '<a class="btn btn-primary sort-btn" id="crs-sort-unread" href="#">Unread' + arrows + '</a>',
             '<a class="btn btn-primary sort-btn" id="crs-sort-read" href="#">Read' + arrows + '</a>',
             '<a class="btn btn-primary sort-btn" id="crs-sort-total" href="#">Total' + arrows + '</a>',
             '<a class="btn btn-primary sort-btn" id="crs-sort-updated" href="#">Updated' + arrows + '</a>'
