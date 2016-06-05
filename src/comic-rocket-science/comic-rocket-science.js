@@ -20,6 +20,40 @@
         'rating': ['PG', 'R', 'NC-17']
     };
 
+    var Sort = {
+        'title': function(a, b) {
+            var r1 = a.attr('data-title').toLowerCase();
+            var r2 = b.attr('data-title').toLowerCase();
+            r1 = r1.replace(/^((an?|the) )/, '');
+            r2 = r2.replace(/^((an?|the) )/, '');
+            return ((r1 === r2) ? 0 : ((r1 > r2) ? 1 : -1));
+        },
+
+        'rating': function(a, b) {
+            var r1 = RATINGS[a.attr('data-rating')];
+            var r2 = RATINGS[b.attr('data-rating')];
+            return parseInt(r1) - parseInt(r2);
+        },
+
+        'read': function(a, b) {
+            var r1 = a.attr('data-read');
+            var r2 = b.attr('data-read');
+            return parseInt(r1) - parseInt(r2);
+        },
+
+        'total': function(a, b) {
+            var r1 = a.attr('data-total');
+            var r2 = b.attr('data-total');
+            return parseInt(r1) - parseInt(r2);
+        },
+
+        'updated': function(a, b) {
+            var r1 = a.attr('data-date');
+            var r2 = b.attr('data-date');
+            return parseInt(r1) - parseInt(r2);
+        }
+    };
+
     $(d).ready(function(){
         var rules = [
             '#comic-rocket-science-controls {background-color: #51493d; color: #FFF; margin: 0 auto 20px; width: 552px; padding: 10px;}',
@@ -105,7 +139,7 @@
 
         $container.before($status);
 
-        $comics.sort(compareTitles);
+        $comics.sort(Sort.title);
         renderComics();
     });
 
@@ -116,8 +150,6 @@
         filter.title = $(this).val().toLowerCase();
         filterComics();
     });
-
-
 
     $('.span8').on('click', '#comic-rocket-science-controls .sort-btn', function(e) {
         e.preventDefault();
@@ -135,23 +167,8 @@
         $('#comic-rocket-science-controls .sort-btn').removeClass('sorted-asc').removeClass('sorted-desc');
 
         var sortMethod = btn.attr('id').replace('crs-sort-', '');
-        switch (sortMethod) {
-            case 'title':
-                $comics.sort(compareTitles);
-                break;
-            case 'rating':
-                $comics.sort(compareRatings);
-                break;
-            case 'read':
-                $comics.sort(compareReadComics);
-                break;
-            case 'total':
-                $comics.sort(compareTotalComics);
-                break;
-            case 'updated':
-                $comics.sort(compareLastUpdated);
-                break;
-        }
+        $comics.sort(Sort[sortMethod]);
+
         if (newSort < 0) {
             $comics.reverse();
             btn.addClass('sorted-desc');
@@ -180,38 +197,6 @@
             $container.append($comics[i]);
         }
         updateFilterStatus();
-    }
-
-    function compareTitles(a, b) {
-        var r1 = a.attr('data-title').toLowerCase();
-        var r2 = b.attr('data-title').toLowerCase();
-        r1 = r1.replace(/^((an?|the) )/, '');
-        r2 = r2.replace(/^((an?|the) )/, '');
-        return ((r1 === r2) ? 0 : ((r1 > r2) ? 1 : -1));
-    }
-
-    function compareRatings(a, b) {
-        var r1 = RATINGS[a.attr('data-rating')];
-        var r2 = RATINGS[b.attr('data-rating')];
-        return parseInt(r1) - parseInt(r2);
-    }
-
-    function compareReadComics(a, b) {
-        var r1 = a.attr('data-read');
-        var r2 = b.attr('data-read');
-        return parseInt(r1) - parseInt(r2);
-    }
-
-    function compareTotalComics(a, b) {
-        var r1 = a.attr('data-total');
-        var r2 = b.attr('data-total');
-        return parseInt(r1) - parseInt(r2);
-    }
-
-    function compareLastUpdated(a, b) {
-        var r1 = a.attr('data-date');
-        var r2 = b.attr('data-date');
-        return parseInt(r1) - parseInt(r2);
     }
 
     function filterComics() {
