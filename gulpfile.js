@@ -21,6 +21,7 @@
     gulp.task('scripts', ['meta'], function() {
         scripts.length = 0;
         return gulp.src('src/**/*.js')
+            .pipe(replaceScriptMetadata())
             .pipe(uglify())
             .pipe(addMetaBlock())
             .pipe(rename(function(path) {
@@ -50,6 +51,20 @@
         return text.trim();
     }
 
+    function replaceScriptMetadata() {
+        function transform(file, cb) {
+            var meta = getScriptMeta(file);
+            var contents = String(file.contents);
+            Object.keys(meta).forEach(function(key){
+                contents = contents.replace('{{' + key.toUpperCase() + '}}', meta[key]);
+            });
+            file.contents = new Buffer(contents);
+            cb(null, file);
+        }
+
+        return require('event-stream').map(transform);
+    }
+
     function addMetaBlock() {
         function transform(file, cb) {
             file.contents = Buffer.concat([new Buffer(generateMeta(file)), file.contents]);
@@ -70,7 +85,7 @@
         return require('event-stream').map(transform);
     }
 
-    function generateMeta(file) {
+    function getScriptMeta(file) {
         var json = getPackageJson(file);
         var buildInfo = getBuildInfo(json['gm-build-info']);
 
@@ -82,7 +97,7 @@
         var downloadUrl = ghBaseUrl + safePath.replace(re, '$1.user.js');
         var homeUrl = ghBaseUrl + safePath.replace(re, '$2/');
 
-        var script = {
+        return {
             'name':        json['nice-name'],
             'description': json['description'],
             'version':     json['version'],
@@ -94,7 +109,10 @@
             'require':     buildInfo['require'],
             'grant':       buildInfo['grant']
         };
+    }
 
+    function generateMeta(file) {
+        var script = getScriptMeta(file);
         scripts.push(script);
 
         var meta = '// ==UserScript==' + "\n"
