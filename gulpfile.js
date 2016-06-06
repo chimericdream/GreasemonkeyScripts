@@ -38,6 +38,13 @@
 
     function generateMarkdown() {
         var text = '';
+        scripts.sort(function(a, b) {
+            var r1 = a['name'].toLowerCase();
+            var r2 = b['name'].toLowerCase();
+            r1 = r1.replace(/^((an?|the) )/, '');
+            r2 = r2.replace(/^((an?|the) )/, '');
+            return ((r1 === r2) ? 0 : ((r1 > r2) ? 1 : -1));
+        });
         scripts.forEach(function(s, idx){
             text += '**[' + s.name + '](' + s.homeUrl + ")**\n\n";
             text += '[![version ' + s.version + '](https://img.shields.io/badge/version-' + s.version + '-brightgreen.svg)](' + s.homeUrl + ")\n\n";
