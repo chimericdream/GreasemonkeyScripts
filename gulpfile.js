@@ -38,7 +38,8 @@
     function generateMarkdown() {
         var text = '';
         scripts.forEach(function(s, idx){
-            text += '**[' + s.name + '](' + s.homeUrl + ')** [![v' + s.version + '](https://img.shields.io/badge/v-' + s.version + '-brightgreen.svg)](' + s.homeUrl + ")\n\n";
+            text += '**[' + s.name + '](' + s.homeUrl + ")**\n\n";
+            text += '[![version ' + s.version + '](https://img.shields.io/badge/version-' + s.version + '-brightgreen.svg)](' + s.homeUrl + ")\n\n";
             if (s.description !== '') {
                 text += s.description + "\n\n";
             }
