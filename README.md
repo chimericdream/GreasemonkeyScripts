@@ -18,7 +18,7 @@ Greasemonkey script to make Instagram images clickable to view the original.
 
 **[Comic Rocket Science](https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/comic-rocket-science/)**
 
-[![version 0.3.2a](https://img.shields.io/badge/version-0.3.2a-brightgreen.svg)](https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/comic-rocket-science/)
+[![version 0.3.3a](https://img.shields.io/badge/version-0.3.3a-brightgreen.svg)](https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/comic-rocket-science/)
 
 Greasemonkey script to add more comic management features to Comic Rocket.
 

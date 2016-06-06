@@ -122,7 +122,7 @@
         var $controls = $(d.createElement('div'));
         $controls.attr('id', 'comic-rocket-science-controls');
 
-        var header = '<span class="comics-item-image"><span>Comic Rocket <strong>Science</strong></span></span>';
+        var header = '<span class="comics-item-image" title="v{{VERSION}}"><span>Comic Rocket <strong>Science</strong></span></span>';
         var search = '<div class="form-search"><input id="crs-title-search" placeholder="Filter by title"/></div>';
         var filterButtons = [
             '<label><input type="checkbox" name="crs-rating-filter" value="PG" checked> PG</label>',
