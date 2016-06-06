@@ -4,7 +4,7 @@
     "version": "0.3.2a",
     "description": "Greasemonkey script to add more comic management features to Comic Rocket.",
     "gm-build-info": {
-        "grant": [],
+        "grant": ["none"],
         "require": [],
         "urls": [
             "http://comic-rocket.com/",

@@ -4,7 +4,7 @@
     "version": "1.0.1",
     "description": "Greasemonkey script to add the total duration for a playlist to the details section.",
     "gm-build-info": {
-        "grant": [],
+        "grant": ["none"],
         "require": [
             "https://raw.githubusercontent.com/chimericdream/JS-Debounce/master/debounce.js",
             "http://code.jquery.com/jquery-latest.js"
