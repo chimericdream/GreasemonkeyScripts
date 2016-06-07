@@ -1,6 +1,12 @@
 (function() {
     'use strict';
 
+    var BUILD_MODE = {
+        'DEV': 1,
+        'PROD': 2,
+        'META': 3
+    };
+
     var gulp = require('gulp');
     var uglify = require('gulp-uglify');
     var rename = require('gulp-rename');
@@ -8,10 +14,11 @@
     var scripts = [];
 
     gulp.task('default', ['scripts', 'meta', 'readme']);
+    gulp.task('dev', ['scripts-dev']);
 
     gulp.task('meta', function() {
         return gulp.src('src/**/*.js')
-            .pipe(setMetaBlock())
+            .pipe(addMetaBlock())
             .pipe(rename(function(path) {
                 path.basename += '.meta';
             }))
@@ -19,15 +26,24 @@
     });
 
     gulp.task('scripts', ['meta'], function() {
-        scripts.length = 0;
         return gulp.src('src/**/*.js')
             .pipe(replaceScriptMetadata())
             .pipe(uglify())
-            .pipe(addMetaBlock())
+            .pipe(addProdMetaBlock())
             .pipe(rename(function(path) {
                 path.basename += '.user';
             }))
             .pipe(gulp.dest('dist'));
+    });
+
+    gulp.task('scripts-dev', function() {
+        return gulp.src('src/**/*.js')
+            .pipe(replaceScriptMetadata())
+            .pipe(addDevMetaBlock())
+            .pipe(rename(function(path) {
+                path.basename += '.user';
+            }))
+            .pipe(gulp.dest('dev'));
     });
 
     gulp.task('readme', ['scripts'], function() {
@@ -74,7 +90,7 @@
 
     function addMetaBlock() {
         function transform(file, cb) {
-            file.contents = Buffer.concat([new Buffer(generateMeta(file)), file.contents]);
+            file.contents = new Buffer(generateMeta(file, BUILD_MODE.META));
 
             cb(null, file);
         }
@@ -82,9 +98,19 @@
         return require('event-stream').map(transform);
     }
 
-    function setMetaBlock() {
+    function addDevMetaBlock() {
         function transform(file, cb) {
-            file.contents = new Buffer(generateMeta(file));
+            file.contents = Buffer.concat([new Buffer(generateMeta(file, BUILD_MODE.DEV)), file.contents]);
+
+            cb(null, file);
+        }
+
+        return require('event-stream').map(transform);
+    }
+
+    function addProdMetaBlock() {
+        function transform(file, cb) {
+            file.contents = Buffer.concat([new Buffer(generateMeta(file, BUILD_MODE.PROD)), file.contents]);
 
             cb(null, file);
         }
@@ -118,16 +144,27 @@
         };
     }
 
-    function generateMeta(file) {
+    function generateMeta(file, mode) {
         var script = getScriptMeta(file);
-        scripts.push(script);
+        if (mode === BUILD_MODE.PROD) {
+            scripts.push(script);
+        }
 
-        var meta = '// ==UserScript==' + "\n"
-                 + '// @name        ' + script.name + "\n"
-                 + '// @description ' + script.description + "\n"
-                 + '// @version     ' + script.version + "\n"
-                 + '// @updateUrl   ' + script.updateUrl + "\n"
-                 + '// @downloadUrl ' + script.downloadUrl + "\n";
+        var meta = '// ==UserScript==' + "\n";
+
+        if (mode === BUILD_MODE.DEV) {
+            meta += '// @name        ' + script.name + " (Dev)\n";
+        } else {
+            meta += '// @name        ' + script.name + "\n";
+        }
+
+        meta += '// @version     ' + script.version + "\n"
+             +  '// @description ' + script.description + "\n";
+
+        if (mode !== BUILD_MODE.DEV) {
+            meta += '// @updateUrl   ' + script.updateUrl + "\n"
+                 +  '// @downloadUrl ' + script.downloadUrl + "\n";
+        }
 
         script.urls.forEach(function(url) {
             meta += '// @include     ' + url + "\n";
