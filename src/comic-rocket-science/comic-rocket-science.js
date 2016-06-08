@@ -1,71 +1,7 @@
 (function($, w, d, undefined) {
     'use strict';
 
-    var RATINGS     = {
-        'PG': 1,
-        'R': 2,
-        'NC-17': 3,
-        'UR': 4
-    };
-
-    var $comics     = [];
-    var $wrapper    = null;
-    var $container  = $(d.createElement('div'));
-    var $status     = $(d.createElement('div')).attr('id', 'comic-status-text');
-
-    var readStrips  = 0;
-    var totalStrips = 0;
-
-    var filter      = {
-        'title':  '',
-        'rating': ['PG', 'R', 'NC-17', 'UR']
-    };
-
-    var Sort = {
-        'title': function(a, b) {
-            var r1 = a.attr('data-title').toLowerCase();
-            var r2 = b.attr('data-title').toLowerCase();
-            r1 = r1.replace(/^((an?|the) )/, '');
-            r2 = r2.replace(/^((an?|the) )/, '');
-            return ((r1 === r2) ? 0 : ((r1 > r2) ? 1 : -1));
-        },
-
-        'rating': function(a, b) {
-            var r1 = RATINGS[a.attr('data-rating')];
-            var r2 = RATINGS[b.attr('data-rating')];
-            return parseInt(r1) - parseInt(r2);
-        },
-
-        'read': function(a, b) {
-            var r1 = a.attr('data-read');
-            var r2 = b.attr('data-read');
-            return parseInt(r1) - parseInt(r2);
-        },
-
-        'total': function(a, b) {
-            var r1 = a.attr('data-total');
-            var r2 = b.attr('data-total');
-            return parseInt(r1) - parseInt(r2);
-        },
-
-        'updated': function(a, b) {
-            var r1 = a.attr('data-date');
-            var r2 = b.attr('data-date');
-            return parseInt(r1) - parseInt(r2);
-        },
-
-        'unread': function(a, b) {
-            var r1 = parseInt(a.attr('data-total')) - parseInt(a.attr('data-read'));
-            var r2 = parseInt(b.attr('data-total')) - parseInt(b.attr('data-read'));
-            return parseInt(r1) - parseInt(r2);
-        },
-
-        'percent-read': function(a, b) {
-            var r1 = (parseInt(a.attr('data-read')) / parseInt(a.attr('data-total'))) * 100;
-            var r2 = (parseInt(b.attr('data-read')) / parseInt(b.attr('data-total'))) * 100;
-            return r1 - r2;
-        }
-    };
+    var antares = new ComicRocketScience();
 
     $(d).ready(function(){
         var rules = [
@@ -158,7 +94,7 @@
 
         $container.before($status);
 
-        $comics.sort(Sort.title);
+        $comics.sort(ComicSort.title);
         renderComics();
     });
 
@@ -186,7 +122,7 @@
         $('#comic-rocket-science-controls .sort-btn').removeClass('sorted-asc').removeClass('sorted-desc');
 
         var sortMethod = btn.attr('id').replace('crs-sort-', '');
-        $comics.sort(Sort[sortMethod]);
+        $comics.sort(ComicSort[sortMethod]);
 
         if (newSort < 0) {
             $comics.reverse();
@@ -210,40 +146,104 @@
         filterComics();
     });
 
-    function renderComics() {
-        $container.empty();
-        for (var i = 0; i < $comics.length; i++) {
-            $container.append($comics[i]);
-        }
-        updateFilterStatus();
+    function ComicRocketScience() {
+        this.list = new ComicList();
     }
 
-    function filterComics() {
-        for (var i = 0; i < $comics.length; i++) {
-            var $c = $comics[i];
+    function ComicList() {
+        this.$wrapper    = null;
+        this.$container  = $(d.createElement('div'));
+        this.$comics     = [];
+        this.$status     = $(d.createElement('div')).attr('id', 'comic-status-text');
+        this.comicFilter = {
+            'title':  '',
+            'rating': ['PG', 'R', 'NC-17', 'UR']
+        };
+    }
 
+    ComicList.prototype.render = function() {
+        this.$container.empty();
+        this.$container.append(this.$comics);
+        this.updateStatusText();
+    };
+
+    ComicList.prototype.filter = function() {
+        this.$comics.forEach(function($c) {
             var title  = $c.attr('data-title').toLowerCase();
             var rating = $c.attr('data-rating');
 
-            var matchesTitle = (filter.title === '' || title.includes(filter.title));
-            var matchesRating = (filter.rating.length === 4 || filter.rating.indexOf(rating) !== -1);
+            var matchesTitle = (this.comicFilter.title === '' || title.includes(this.comicFilter.title));
+            var matchesRating = (this.comicFilter.rating.length === 4 || this.comicFilter.rating.indexOf(rating) !== -1);
 
             if (matchesTitle && matchesRating) {
                 $c.show();
-                continue;
+                return;
             }
             $c.hide();
-        }
-        updateFilterStatus();
-    }
+        }, this);
+        this.updateStatusText();
+    };
 
-    function updateFilterStatus() {
-        var visible = 0;
-        for (var i = 0; i < $comics.length; i++) {
-            if ($comics[i].is(':visible')) {
-                visible++;
-            }
+    ComicList.prototype.updateStatusText = function() {
+        var visible = this.$comics.filter(function($c) {
+            return $c.is(':visible');
+        }).length;
+        this.$status.text('Showing ' + visible + ' of ' + this.$comics.length + ' comics.');
+    };
+
+    var RATINGS     = {
+        'PG': 1,
+        'R': 2,
+        'NC-17': 3,
+        'UR': 4
+    };
+
+    var readStrips  = 0;
+    var totalStrips = 0;
+
+    var ComicSort = {
+        'title': function(a, b) {
+            var r1 = a.attr('data-title').toLowerCase();
+            var r2 = b.attr('data-title').toLowerCase();
+            r1 = r1.replace(/^((an?|the) )/, '');
+            r2 = r2.replace(/^((an?|the) )/, '');
+            return ((r1 === r2) ? 0 : ((r1 > r2) ? 1 : -1));
+        },
+
+        'rating': function(a, b) {
+            var r1 = RATINGS[a.attr('data-rating')];
+            var r2 = RATINGS[b.attr('data-rating')];
+            return parseInt(r1) - parseInt(r2);
+        },
+
+        'read': function(a, b) {
+            var r1 = a.attr('data-read');
+            var r2 = b.attr('data-read');
+            return parseInt(r1) - parseInt(r2);
+        },
+
+        'total': function(a, b) {
+            var r1 = a.attr('data-total');
+            var r2 = b.attr('data-total');
+            return parseInt(r1) - parseInt(r2);
+        },
+
+        'updated': function(a, b) {
+            var r1 = a.attr('data-date');
+            var r2 = b.attr('data-date');
+            return parseInt(r1) - parseInt(r2);
+        },
+
+        'unread': function(a, b) {
+            var r1 = parseInt(a.attr('data-total')) - parseInt(a.attr('data-read'));
+            var r2 = parseInt(b.attr('data-total')) - parseInt(b.attr('data-read'));
+            return parseInt(r1) - parseInt(r2);
+        },
+
+        'percent-read': function(a, b) {
+            var r1 = (parseInt(a.attr('data-read')) / parseInt(a.attr('data-total'))) * 100;
+            var r2 = (parseInt(b.attr('data-read')) / parseInt(b.attr('data-total'))) * 100;
+            return r1 - r2;
         }
-        $status.text('Showing ' + visible + ' of ' + $comics.length + ' comics.');
-    }
+    };
 }(window.jQuery, window, document));
