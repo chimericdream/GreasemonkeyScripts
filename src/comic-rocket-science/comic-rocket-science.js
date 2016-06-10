@@ -3,7 +3,7 @@
 
     var antares = new ComicRocketScience();
 
-    $(d).ready(function(){
+    $(d).ready(function() {
         var rules = [
             '#comic-rocket-science-controls {background-color: #51493d; color: #FFF; margin: 0 auto 20px; width: 552px; padding: 10px;}',
             '#comic-rocket-science-controls .comics-item-image span {height: auto; padding: 0 0 1ex 0;}',
@@ -23,48 +23,16 @@
         var styles = '<style>' + rules.join('') + '</style>';
         $('head').append(styles);
 
-        $('.comics-item').each(function(){
-            var $comic   = $(this);
-            var title    = $comic.find('.comics-item-image span').text();
-            var rating   = $comic.find('.comics-item-rating abbr').text();
-            var dt       = $comic.find('.comics-item-date div').text().replace('Updated: ', '').replace('-', '');
-            var progress = $comic.find('.progress-label').text().split('/');
-
-            readStrips  += parseInt(progress[0]);
-            totalStrips += parseInt(progress[1]);
-
-            $comic.attr('data-title', title);
-            if (rating === '') {
-                $comic.attr('data-rating', 'UR');
-            } else {
-                $comic.attr('data-rating', rating);
-            }
-            $comic.attr('data-date', dt);
-            $comic.attr('data-read', progress[0]);
-            $comic.attr('data-total', progress[1]);
-
-            if ($wrapper === null) {
-                $wrapper = $comic.parent();
-            }
-            $comics.push($comic);
-        });
-        $wrapper.attr('id', 'comics-wrapper');
-
-        var aside = $('#comic-rocket-sidebar').parent().children()[0];
-        var div = $(aside).children()[0];
-        var pct = (readStrips / totalStrips) * 100;
-        $(div).append('<p>Overall progress: ' + readStrips + '/' + totalStrips + ' (' + pct.toFixed(2) + '%)</p>');
-
-        var $controls = $(d.createElement('div'));
-        $controls.attr('id', 'comic-rocket-science-controls');
+        antares.initialize();
+        antares.renderSidebar();
 
         var header = '<span class="comics-item-image" title="v{{VERSION}}"><span>Comic Rocket <strong>Science</strong></span></span>';
         var search = '<div class="form-search"><input id="crs-title-search" placeholder="Filter by title"/></div>';
         var filterButtons = [
-            '<label><input type="checkbox" name="crs-rating-filter" value="PG" checked> PG</label>',
-            '<label><input type="checkbox" name="crs-rating-filter" value="R" checked> R</label>',
-            '<label><input type="checkbox" name="crs-rating-filter" value="NC-17" checked> NC-17</label>',
-            '<label><input type="checkbox" name="crs-rating-filter" value="UR" checked> Unrated</label>'
+            '<label><input class="rating-filter" type="checkbox" name="crs-rating-filter" value="PG" checked> PG</label>',
+            '<label><input class="rating-filter" type="checkbox" name="crs-rating-filter" value="R" checked> R</label>',
+            '<label><input class="rating-filter" type="checkbox" name="crs-rating-filter" value="NC-17" checked> NC-17</label>',
+            '<label><input class="rating-filter" type="checkbox" name="crs-rating-filter" value="UR" checked> Unrated</label>'
         ];
 
         var arrows = '<span class="asc"> &uparrow;</span><span class="desc"> &downarrow;</span>';
@@ -87,53 +55,22 @@
             sortingButtons.join('')
         ];
 
-        $wrapper.empty().prepend($controls).append($container);
-
-        $controls.append(content.join('<br>'));
-        $controls.after('<hr>');
-
-        $container.before($status);
-
-        $comics.sort(ComicSort.title);
-        renderComics();
+//        $wrapper.empty().prepend($controls).append($container);
+//
+//        $controls.append(content.join('<br>'));
+//        $controls.after('<hr>');
+//
+//        $container.before($status);
+//
+//        $comics.sort(SortMethods.title);
+//        renderComics();
     });
 
-    $('.span8').on('keyup', '#crs-title-search', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
+    $('.span8').on('keyup', '#crs-title-search', antares.handleSearch);
 
-        filter.title = $(this).val().toLowerCase();
-        filterComics();
-    });
+    $('.span8').on('click', '#comic-rocket-science-controls .sort-btn', antares.handleSort);
 
-    $('.span8').on('click', '#comic-rocket-science-controls .sort-btn', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        var btn = $(this);
-        var newSort = 1;
-
-        if (btn.hasClass('sorted-asc')) {
-            newSort = -1;
-        } else if (btn.hasClass('sorted-desc')) {
-            newSort = 1;
-        }
-
-        $('#comic-rocket-science-controls .sort-btn').removeClass('sorted-asc').removeClass('sorted-desc');
-
-        var sortMethod = btn.attr('id').replace('crs-sort-', '');
-        $comics.sort(ComicSort[sortMethod]);
-
-        if (newSort < 0) {
-            $comics.reverse();
-            btn.addClass('sorted-desc');
-        } else {
-            btn.addClass('sorted-asc');
-        }
-        renderComics();
-    });
-
-    $('.span8').on('click', '#comic-rocket-science-controls input', function(e) {
+    $('.span8').on('click', '#comic-rocket-science-controls .rating-filter', function(e) {
         e.stopPropagation();
 
         var $el = $(this);
@@ -147,8 +84,98 @@
     });
 
     function ComicRocketScience() {
+        this.controls = new ComicRocketControls();
         this.list = new ComicList();
+        this.sidebar = new ComicRocketSidebar();
     }
+
+    ComicRocketScience.prototype.initialize = function() {
+        var comics = [];
+        var ovarallProgress = {
+            'read': 0,
+            'total': 0
+        };
+
+        $('.comics-item').each(function() {
+            var $comic   = $(this);
+            var title    = $comic.find('.comics-item-image span').text();
+            var rating   = $comic.find('.comics-item-rating abbr').text();
+            var dt       = $comic.find('.comics-item-date div').text().replace('Updated: ', '').replace('-', '');
+            var progress = $comic.find('.progress-label').text().split('/');
+
+            ovarallProgress.read  += parseInt(progress[0]);
+            ovarallProgress.total += parseInt(progress[1]);
+
+            $comic.attr('data-title', title);
+            if (rating === '') {
+                $comic.attr('data-rating', 'UR');
+            } else {
+                $comic.attr('data-rating', rating);
+            }
+            $comic.attr('data-date', dt);
+            $comic.attr('data-read', ovarallProgress[0]);
+            $comic.attr('data-total', ovarallProgress[1]);
+
+            comics.push($comic);
+        });
+        this.list.setComicList(comics);
+        this.sidebar.setProgress(ovarallProgress.read, ovarallProgress.total);
+    };
+
+    ComicRocketScience.prototype.handleSort = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var btn = $(this);
+        var sortMethod = btn.attr('id').replace('crs-sort-', '');
+
+        var sortDirection = SortDirections.ASC;
+        if (btn.hasClass('sorted-desc')) {
+            sortDirection = SortDirections.DESC;
+        }
+
+        $('#comic-rocket-science-controls .sort-btn').removeClass('sorted-asc').removeClass('sorted-desc');
+
+        this.list.sort(sortMethod, (-1 * sortDirection));
+        btn.addClass('sorted-' + (sortDirection < 0) ? 'asc' : 'desc');
+        this.list.render();
+    };
+
+    ComicRocketScience.prototype.handleSearch = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.list.setTitleFilter($(this).val());
+    };
+
+    ComicRocketScience.prototype.renderSidebar = function() {
+        this.sidebar.render();
+    };
+
+    function ComicRocketControls() {
+        this.$container = $(d.createElement('div'));
+        this.$container.attr('id', 'comic-rocket-science-controls');
+    }
+
+    function ComicRocketSidebar() {
+        this.readStrips  = 0;
+        this.totalStrips = 0;
+        this.$progress = $(d.createElement('p'));
+
+        var aside = $('#comic-rocket-sidebar').parent().children()[0];
+        var div = $(aside).children()[0];
+        $(div).append(this.$progress);
+    }
+
+    ComicRocketSidebar.prototype.setProgress = function(read, total) {
+        this.readStrips  = read;
+        this.totalStrips = total;
+    };
+
+    ComicRocketSidebar.prototype.render = function() {
+        var pct = (this.readStrips / this.totalStrips) * 100;
+        this.$progress.text('Overall progress: ' + this.readStrips + '/' + this.totalStrips + ' (' + pct.toFixed(2) + '%)');
+    };
 
     function ComicList() {
         this.$wrapper    = null;
@@ -161,10 +188,33 @@
         };
     }
 
+    ComicList.prototype.setComicList = function(comics) {
+        this.$comics = comics;
+        if (comics.length > 0) {
+            this.$wrapper = comics[0].parent();
+            this.$wrapper.attr('id', 'comics-wrapper');
+        } else {
+            this.$wrapper = null;
+        }
+    };
+
     ComicList.prototype.render = function() {
         this.$container.empty();
         this.$container.append(this.$comics);
         this.updateStatusText();
+    };
+
+    ComicList.prototype.sort = function(method, direction) {
+        this.$comics.sort(SortMethods[method]);
+
+        if (direction < 0) {
+            this.$comics.reverse();
+        }
+    };
+
+    ComicList.prototype.setTitleFilter = function(search) {
+        this.comicFilter.title = search.toLowerCase();
+        this.filter();
     };
 
     ComicList.prototype.filter = function() {
@@ -198,10 +248,12 @@
         'UR': 4
     };
 
-    var readStrips  = 0;
-    var totalStrips = 0;
+    var SortDirections = {
+        'ASC': 1,
+        'DESC': -1
+    };
 
-    var ComicSort = {
+    var SortMethods = {
         'title': function(a, b) {
             var r1 = a.attr('data-title').toLowerCase();
             var r2 = b.attr('data-title').toLowerCase();
