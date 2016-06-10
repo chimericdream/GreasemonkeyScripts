@@ -158,8 +158,8 @@
             meta += '// @name        ' + script.name + "\n";
         }
 
-        meta += '// @version     ' + script.version + "\n"
-             +  '// @description ' + script.description + "\n";
+        meta += '// @description ' + script.description + "\n"
+             +  '// @version     ' + script.version + "\n";
 
         if (mode !== BUILD_MODE.DEV) {
             meta += '// @updateUrl   ' + script.updateUrl + "\n"
