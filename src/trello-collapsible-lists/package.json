@@ -1,0 +1,14 @@
+{
+    "name": "@chimericdream/trello-collapsible-lists",
+    "nice-name": "Collapsible Lists in Trello",
+    "version": "0.0.1a",
+    "description": "",
+    "gm-build-info": {
+        "grant": ["none"],
+        "require": [
+            "https://raw.githubusercontent.com/chimericdream/JS-Debounce/master/debounce.js",
+            "http://code.jquery.com/jquery-latest.js"
+        ],
+        "urls": ["https://trello.com/b/*"]
+    }
+}

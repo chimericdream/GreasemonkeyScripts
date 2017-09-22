@@ -16,6 +16,12 @@ Greasemonkey script to make Instagram images clickable to view the original.
 
 -----
 
+**[Collapsible Lists in Trello](https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/trello-collapsible-lists/)**
+
+[![version 0.0.1a](https://img.shields.io/badge/version-0.0.1a-brightgreen.svg)](https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/trello-collapsible-lists/)
+
+-----
+
 **[Comic Rocket Science](https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/comic-rocket-science/)**
 
 [![version 0.3.3a](https://img.shields.io/badge/version-0.3.3a-brightgreen.svg)](https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/comic-rocket-science/)
