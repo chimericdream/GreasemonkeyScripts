@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Comic Rocket Science
-// @description Greasemonkey script to add more comic management features to Comic Rocket.
 // @version     0.3.3a
+// @description Greasemonkey script to add more comic management features to Comic Rocket.
 // @updateUrl   https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/comic-rocket-science/comic-rocket-science.meta.js
 // @downloadUrl https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/comic-rocket-science/comic-rocket-science.user.js
 // @include     http://comic-rocket.com/
