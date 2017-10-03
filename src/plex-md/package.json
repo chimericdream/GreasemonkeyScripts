@@ -1,0 +1,15 @@
+{
+    "name": "@chimericdream/plex-md",
+    "nice-name": "PlexMD",
+    "version": "1.0.0",
+    "description": "Greasemonkey script to parse item descriptions via Markdown in Plex Media Server.",
+    "gm-build-info": {
+        "grant": ["none"],
+        "require": [
+            "https://cdn.rawgit.com/showdownjs/showdown/1.7.4/dist/showdown.min.js",
+            "https://raw.githubusercontent.com/chimericdream/JS-Debounce/master/debounce.js",
+            "http://code.jquery.com/jquery-3.2.1.min.js"
+        ],
+        "urls": ["https://app.plex.tv/*"]
+    }
+}
