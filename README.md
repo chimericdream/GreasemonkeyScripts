@@ -32,6 +32,14 @@ Adds a download button to all DeviantArt images
 
 -----
 
+**[PlexMD](https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/plex-md/)**
+
+[![version 1.0.0a](https://img.shields.io/badge/version-1.0.0a-brightgreen.svg)](https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/plex-md/)
+
+Greasemonkey script to parse item descriptions via Markdown in Plex Media Server.
+
+-----
+
 **[Twitter Skip to Image](https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/twitter-skip-to-image/)**
 
 [![version 1.0.1](https://img.shields.io/badge/version-1.0.1-brightgreen.svg)](https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/twitter-skip-to-image/)
