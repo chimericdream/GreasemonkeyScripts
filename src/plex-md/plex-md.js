@@ -32,7 +32,7 @@
 
         $parent.prepend(html);
         $parent.addClass('pmd-markdownified');
-    }, 2000);
+    }, 500);
 
     win.addEventListener('DOMNodeInserted', parseMd, false);
-}(jQuery, window, window.fnDebounce, window.showdown));
+}(jQuery, window, window.fnDebounce, this.showdown));
