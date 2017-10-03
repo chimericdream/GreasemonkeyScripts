@@ -1,7 +1,7 @@
 {
     "name": "@chimericdream/plex-md",
     "nice-name": "PlexMD",
-    "version": "1.0.0a",
+    "version": "1.0.0",
     "description": "Greasemonkey script to parse item descriptions via Markdown in Plex Media Server.",
     "gm-build-info": {
         "grant": ["none"],
