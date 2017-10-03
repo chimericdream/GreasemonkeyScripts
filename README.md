@@ -34,7 +34,7 @@ Adds a download button to all DeviantArt images
 
 **[PlexMD](https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/plex-md/)**
 
-[![version 1.0.0a](https://img.shields.io/badge/version-1.0.0a-brightgreen.svg)](https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/plex-md/)
+[![version 1.0.0](https://img.shields.io/badge/version-1.0.0-brightgreen.svg)](https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/plex-md/)
 
 Greasemonkey script to parse item descriptions via Markdown in Plex Media Server.
 

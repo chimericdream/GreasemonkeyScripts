@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        PlexMD
-// @version     1.0.0a
+// @version     1.0.0
 // @description Greasemonkey script to parse item descriptions via Markdown in Plex Media Server.
 // @updateUrl   https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/plex-md/plex-md.meta.js
 // @downloadUrl https://github.com/chimericdream/GreasemonkeyScripts/raw/master/dist/plex-md/plex-md.user.js
