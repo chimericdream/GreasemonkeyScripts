@@ -1,4 +1,4 @@
-(function($, win, showdown) {
+(function($, win, debounce, showdown) {
     'use strict';
 
     var parseMd = debounce(function() {
@@ -35,4 +35,4 @@
     }, 2000);
 
     win.addEventListener('DOMNodeInserted', parseMd, false);
-}(jQuery, window, window.showdown));
+}(jQuery, window, window.fnDebounce, window.showdown));
