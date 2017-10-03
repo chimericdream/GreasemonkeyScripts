@@ -7,6 +7,7 @@
         "grant": ["none"],
         "require": [
             "https://cdn.rawgit.com/showdownjs/showdown/1.7.4/dist/showdown.min.js",
+            "https://raw.githubusercontent.com/chimericdream/JS-Debounce/master/debounce.js",
             "http://code.jquery.com/jquery-3.2.1.min.js"
         ],
         "urls": ["https://app.plex.tv/*"]
